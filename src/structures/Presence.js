@@ -149,7 +149,7 @@ class Activity {
 
     /**
      * The activity's id
-     * @type {string}
+     * @type {Snowflake}
      */
     this.id = data.id;
 
