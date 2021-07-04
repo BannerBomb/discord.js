@@ -104,7 +104,7 @@ class MessagePayload {
 
   /**
    * Makes the content of this message.
-   * @returns {string?}
+   * @returns {?string}
    */
   makeContent() {
     let content;
