@@ -221,6 +221,7 @@ declare module 'discord.js' {
     public type: ActivityType;
     public url: string | null;
     public equals(activity: Activity): boolean;
+    public toString(): string;
   }
 
   export class ActivityFlags extends BitField<ActivityFlagsString> {
@@ -264,7 +265,7 @@ declare module 'discord.js' {
     public resolveFiles(): Promise<this>;
   }
 
-  export abstract class Application {
+  export abstract class Application extends Base {
     constructor(client: Client, data: unknown);
     public readonly createdAt: Date;
     public readonly createdTimestamp: number;
@@ -379,7 +380,7 @@ declare module 'discord.js' {
   export class BaseMessageComponent {
     constructor(data?: BaseMessageComponent | BaseMessageComponentOptions);
     public type: MessageComponentType | null;
-    private static create(data: MessageComponentOptions): MessageComponent;
+    private static create(data: MessageComponentOptions, client?: Client | WebhookClient, skipValidation?: boolean): MessageComponent | undefined;
     private static resolveType(type: MessageComponentTypeResolvable): MessageComponentType;
   }
 
@@ -420,7 +421,7 @@ declare module 'discord.js' {
     public deleted: boolean;
     public id: Snowflake;
     public type: keyof typeof ChannelType;
-    public delete(reason?: string): Promise<Channel>;
+    public delete(): Promise<Channel>;
     public fetch(force?: boolean): Promise<Channel>;
     public isText(): this is TextChannel | DMChannel | NewsChannel | ThreadChannel;
     public isThread(): this is ThreadChannel;
@@ -453,7 +454,7 @@ declare module 'discord.js' {
     public fetchGuildTemplate(template: GuildTemplateResolvable): Promise<GuildTemplate>;
     public fetchVoiceRegions(): Promise<Collection<string, VoiceRegion>>;
     public fetchWebhook(id: Snowflake, token?: string): Promise<Webhook>;
-    public fetchWidget(id: Snowflake): Promise<Widget>;
+    public fetchWidget(guild: GuildResolvable): Promise<Widget>;
     public generateInvite(options?: InviteGenerationOptions): string;
     public login(token?: string): Promise<string>;
     public sweepMessages(lifetime?: number): number;
@@ -493,7 +494,7 @@ declare module 'discord.js' {
     public owner: User | Team | null;
     public readonly partial: boolean;
     public rpcOrigins: string[];
-    public fetch(): Promise<ClientApplication>;
+    public fetch(): Promise<this>;
   }
 
   export class ClientUser extends User {
@@ -807,7 +808,7 @@ declare module 'discord.js' {
     public static resolveCode(data: string, regx: RegExp): string;
     public static resolveFile(resource: BufferResolvable | Stream): Promise<Buffer | Stream>;
     public static resolveFileAsBuffer(resource: BufferResolvable | Stream): Promise<Buffer>;
-    public static resolveImage(resource: BufferResolvable | Base64Resolvable): Promise<string>;
+    public static resolveImage(resource: BufferResolvable | Base64Resolvable): Promise<string | null>;
     public static resolveInviteCode(data: InviteResolvable): string;
     public static resolveGuildTemplateCode(data: GuildTemplateResolvable): string;
   }
